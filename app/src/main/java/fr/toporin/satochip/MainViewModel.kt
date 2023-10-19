@@ -1,46 +1,40 @@
 package fr.toporin.satochip
 
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import de.timroes.axmlrpc.XMLRPCClient
-import de.timroes.axmlrpc.XMLRPCClient.FLAGS_NIL
 import de.timroes.axmlrpc.XMLRPCException
-import de.timroes.axmlrpc.XMLRPCServerException
+import fr.toporin.satochip.util.FactorItem
+import fr.toporin.satochip.util.RequestItem
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.net.MalformedURLException
 import java.net.URL
 
+
 class MainViewModel : ViewModel() {
+    private var factorItem: FactorItem? = null
+    val id2FALiveData = MutableLiveData<String>()
+    val messageLiveData = MutableLiveData<String>()
+    val decryptedMessageLiveData = MutableLiveData<Map<String, Any>>()
+    val msgJsonLiveData = MutableLiveData<Map<String, Any>>()
 
-    val serverUrl = URL("https://cosigner.satochip.io")
-
-    fun putMessage(id: String, msg: String) = viewModelScope.launch(Dispatchers.IO) {
-        try {
-            val serverUrl = URL("https://cosigner.satochip.io")
-            //Ajout du FLAGS_NIL pour que le serveur accepte les paramètres nil
-            val client = XMLRPCClient(serverUrl, XMLRPCClient.FLAGS_NIL)
-            val result = client.call("put", id, msg)
-
-            if (result == null) {
-                println("Message envoyé et réponse du serveur est nil, considéré comme succès.")
-            } else {
-                println("Message envoyé, réponse du serveur : $result")
-            }
-        } catch (ex: XMLRPCServerException) {
-            // Le serveur a renvoyé une erreur.
-            println("Erreur du serveur : ${ex.message}")
-        } catch (ex: MalformedURLException) {
-            // L'URL du serveur est invalide.
-            println("Erreur serveur URL invalide : ${ex.message}")
-        } catch (ex: XMLRPCException) {
-            // Une autre exception.
-            println("Erreur : ${ex.message}")
-        }
+    fun generateValues(secret_2FA: ByteArray) {
+        factorItem = FactorItem(secret_2FA)
+        val generatedId2FA = factorItem!!.id2FA
+        id2FALiveData.postValue(generatedId2FA)
+        getMessage(generatedId2FA)
     }
 
-    suspend fun getMessage(id: String): String? = withContext(Dispatchers.IO) {
+    fun getId2FA(): String {
+        return factorItem?.id2FA ?: ""
+    }
+
+    //val serverUrl = URL("https://cosigner.satochip.io")
+    val serverUrl = URL("https://cosigner.electrum.org")
+
+    suspend fun fetchMessage(id: String): String? {
         var message: String? = null
         try {
             val client = XMLRPCClient(serverUrl)
@@ -51,6 +45,25 @@ class MainViewModel : ViewModel() {
         } catch (e: XMLRPCException) {
             e.printStackTrace()
         }
-        message
+        return message
+    }
+
+    fun getMessage(id: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            println("getMessage appelé avec l'ID: $id")
+
+            val message = fetchMessage(id)
+            println("Message récupéré: $message")
+
+            messageLiveData.postValue(message ?: "Message vide")
+            println("messageLiveData mis à jour.")
+
+            val decryptedMap = factorItem!!.decryptRequest(message ?: "")
+            decryptedMessageLiveData.postValue(decryptedMap)
+            println("decryptedMessageLiveData mis à jour.")
+
+            msgJsonLiveData.postValue(decryptedMap)
+            println("msgJsonLiveData mis à jour.")
+        }
     }
 }
