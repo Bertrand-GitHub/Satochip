@@ -1,6 +1,5 @@
 package fr.toporin.satochip.ui
 
-
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -14,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.ViewModelProvider
 import fr.toporin.satochip.viewmodel.MainViewModel
 import fr.toporin.satochip.ui.theme.SatochipTheme
@@ -43,6 +43,7 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+@Preview(showBackground = true)
 @Composable
 fun DisplayValues(viewModel: MainViewModel) {
     val id2FA = viewModel.id2FALiveData.observeAsState("").value
