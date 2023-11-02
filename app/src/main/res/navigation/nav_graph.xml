@@ -1,0 +1,30 @@
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/splashFragment">
+    <!-- Splash fragment -->
+    <fragment
+        android:id="@+id/splashFragment"
+        android:name="fr.toporin.satochip.ui.fragment.SplashFragment">
+        <action
+            android:id="@+id/action_splashFragment_to_transactionFragment"
+            app:destination="@id/transactionFragment" />
+    </fragment>
+    <!-- Transaction fragment -->
+    <fragment
+        android:id="@+id/transactionFragment"
+        android:name="fr.toporin.satochip.ui.fragment.TransactionFragment">
+        <action
+            android:id="@+id/action_transactionFragment_to_qrCodeFragment"
+            app:destination="@id/qrCodeFragment" />
+    </fragment>
+    <!-- QR code fragment -->
+    <fragment
+        android:id="@+id/qrCodeFragment"
+        android:name="fr.toporin.satochip.ui.fragment.QrCodeFragment"
+        android:label="fragment_qr_code" />
+        <action
+            android:id="@+id/action_qrCodeFragment_to_transactionFragment"
+            app:destination="@id/transactionFragment" />
+    <!-- Other fragments -->
+</navigation>

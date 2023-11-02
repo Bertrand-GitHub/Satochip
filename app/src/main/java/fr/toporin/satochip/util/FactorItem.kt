@@ -15,14 +15,15 @@ import javax.crypto.Mac
 import javax.crypto.spec.IvParameterSpec
 import javax.crypto.spec.SecretKeySpec
 
-data class FactorItem(private val secret_2FA: ByteArray) {
+data class FactorItem(private val secret2FA: ByteArray) {
     val id2FA: String
     var keyBytes: ByteArray
+
     init {
         //HMAC SHA1
         val message = "id_2FA".toByteArray(Charsets.UTF_8)
         val hmac = Mac.getInstance("HmacSHA1")
-        val keySpec = SecretKeySpec(Hex.decode(secret_2FA), "HmacSHA1")
+        val keySpec = SecretKeySpec(Hex.decode(secret2FA), "HmacSHA1")
         hmac.init(keySpec)
         val hmacBytes = hmac.doFinal(message)
         //SHA256
@@ -40,7 +41,7 @@ data class FactorItem(private val secret_2FA: ByteArray) {
         // Calcule keyBytes
         val messageForKey = "key_2FA".toByteArray(Charsets.UTF_8)
         val hmacForKey = Mac.getInstance("HmacSHA1")
-        val keySpecForKey = SecretKeySpec(Hex.decode(secret_2FA), "HmacSHA1")
+        val keySpecForKey = SecretKeySpec(Hex.decode(secret2FA), "HmacSHA1")
         hmacForKey.init(keySpecForKey)
         val hmacBytesForKey = hmacForKey.doFinal(messageForKey)
         // Garde les 16 premiers octets sur 20
