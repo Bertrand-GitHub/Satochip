@@ -24,13 +24,13 @@
     <!-- Settings fragment -->
     <fragment
         android:id="@+id/settingsFragment"
-        android:name="fr.toporin.satochip.ui.fragment.SettingsFragment"
+        android:name="fr.toporin.satochip.ui.fragment.SettingFragment"
         android:label="fragment_settings" />
 
     <!-- Logs fragment -->
     <fragment
         android:id="@+id/logsFragment"
-        android:name="fr.toporin.satochip.ui.fragment.LogsFragment"
+        android:name="fr.toporin.satochip.ui.fragment.LogFragment"
         android:label="fragment_logs" />
 
     <!-- Other fragments -->

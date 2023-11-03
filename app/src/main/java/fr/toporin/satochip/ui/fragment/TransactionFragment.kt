@@ -4,9 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,8 +12,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
@@ -24,7 +19,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -36,13 +30,16 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.fragment.findNavController
 import fr.toporin.satochip.R
+import fr.toporin.satochip.model.enums.UserFriendlyRequest
 import fr.toporin.satochip.ui.component.AcceptButton
 import fr.toporin.satochip.ui.component.CommonBottomNavigation
+import fr.toporin.satochip.ui.component.CommonColumn
 import fr.toporin.satochip.ui.component.CommonContainer
 import fr.toporin.satochip.ui.component.CommonHeader
 import fr.toporin.satochip.ui.component.RejectButton
 import fr.toporin.satochip.ui.theme.SatochipTheme
-import fr.toporin.satochip.util.DisplayRequestInfo
+import fr.toporin.satochip.ui.theme.contentStyle
+import fr.toporin.satochip.ui.theme.titleStyle
 import fr.toporin.satochip.viewmodel.TransactionViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -68,6 +65,36 @@ class TransactionFragment : Fragment() {
                 SatochipTheme {
                     DisplayValues(viewModel = viewModel)
                 }
+            }
+        }
+    }
+
+    @Composable
+    fun DisplayRequestInfo(
+        generatedId2FA: String,
+        rawRequest: String,
+        message: String,
+        authentiKey: String
+    ) {
+        when (UserFriendlyRequest.fromRawRequest(rawRequest)) {
+            UserFriendlyRequest.RESET_SEED -> {
+                CommonColumn(title = "AuthentiKey:", content = authentiKey, titleStyle = titleStyle, contentStyle = contentStyle)
+            }
+            UserFriendlyRequest.SIGN_MESSAGE -> {
+                CommonColumn(title = "Message:", content = message, titleStyle = titleStyle, contentStyle = contentStyle)
+            }
+            UserFriendlyRequest.RESET_2FA -> {
+                CommonColumn(title = "Your 2FA ID is:", content = generatedId2FA, titleStyle = titleStyle, contentStyle = contentStyle)
+            }
+            else -> {
+                Text(
+                    text = "Unknown request",
+                    style = TextStyle(
+                        fontWeight = FontWeight.Light,
+                        fontSize = 24.sp,
+                        color = Color(0xFFFFFFFF)
+                    )
+                )
             }
         }
     }
@@ -101,7 +128,7 @@ class TransactionFragment : Fragment() {
                 CommonContainer {
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.spacedBy(32.dp)
+                        verticalArrangement = Arrangement.spacedBy(16.dp)
                     ) {
                         Text(
                             text = "The request is:",

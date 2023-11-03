@@ -50,17 +50,18 @@ class TransactionViewModel : ViewModel() {
         viewModelScope.launch {
             println("getMessage appelé avec l'ID: $generatedId2FA")
             val message = withContext(Dispatchers.IO) { messageRepository.fetchMessage(generatedId2FA) }
-            val decryptedMessage = message?.let { factorItem!!.decryptRequest(it) }
+            val decryptedRequest = message?.let { factorItem!!.decryptRequest(it) }
 
-            println("msgJsonLiveData mis à jour = $decryptedMessage")
+            println("msgJsonLiveData mis à jour = $decryptedRequest")
 
-            decryptedMessage?.let { decryptedMsg ->
-                getRequest(decryptedMsg)
+            decryptedRequest?.let { decryptedMsg ->
+                val rawRequest = getRequest(decryptedMsg)
+                println("rawRequest = $rawRequest")
 
-                when {
-                    decryptedMsg.containsKey("authentikeyx") -> getAuthentiKey(decryptedMsg)
-                    decryptedMsg.containsKey("msg") -> getMessage(decryptedMsg)
-                    decryptedMsg.containsKey("action") -> getReset2FA(decryptedMsg)
+                when (rawRequest) {
+                    "reset_seed" -> getResetSeedRequest(decryptedMsg)
+                    "sign_msg" -> getSignMessageRequest(decryptedMsg)
+                    "reset_2FA" -> getReset2FARequest(decryptedMsg)
                     else -> {
                         // Gérer le cas où aucune des clés n'est présente
                     }
@@ -69,28 +70,29 @@ class TransactionViewModel : ViewModel() {
         }
     }
 
-    fun getRequest(decryptedMessage: Map<String, Any>) {
-        val rawRequest = decryptedMessage["action"] as? String
-        val userFriendlyRequest = UserFriendlyRequest.fromRawRequest(rawRequest ?: "")
-        requestLiveData.postValue((userFriendlyRequest?.displayName ?: "Action non trouvée"))
-        rawRequestLiveData.postValue(rawRequest ?: "Action non trouvée")
+    fun getRequest(decryptedMessage: Map<String, Any>): String {
+        val rawRequest = decryptedMessage["action"] as? String ?: "Action non trouvée"
+        val userFriendlyRequest = UserFriendlyRequest.fromRawRequest(rawRequest)
+        requestLiveData.postValue(userFriendlyRequest?.displayName ?: rawRequest)
+        rawRequestLiveData.postValue(rawRequest)
         println("actionLiveData mis à jour = $userFriendlyRequest")
+        return rawRequest
     }
 
     //To Sign Message
-    fun getMessage(decryptedMessage: Map<String, Any>) {
+    fun getSignMessageRequest(decryptedMessage: Map<String, Any>) {
         val rawMessage = decryptedMessage["msg"] as? String
         messageLiveData.postValue(rawMessage ?: "Message non trouvé")
         println("messageLiveData mis à jour = $rawMessage")
     }
 
     // To Reset Seed
-    fun getAuthentiKey(decryptedMessage: Map<String, Any>) {
+    fun getResetSeedRequest(decryptedMessage: Map<String, Any>) {
         val rawAuthentiKey = decryptedMessage["authentikeyx"] as? String
         authentiKeyLiveData.postValue(rawAuthentiKey ?: "AuthentiKeyX non trouvé")
         println("authentiKey = $rawAuthentiKey")
 
-    }fun getReset2FA(decryptedMessage: Map<String, Any>) {
+    }fun getReset2FARequest(decryptedMessage: Map<String, Any>) {
         val rawReset2FA = decryptedMessage["action"] as? String
         reset2FALiveData.postValue(rawReset2FA ?: "Reset 2FA non trouvé")
         println("reset2FA = $rawReset2FA")
