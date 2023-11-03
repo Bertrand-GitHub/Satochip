@@ -37,6 +37,9 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.fragment.findNavController
 import fr.toporin.satochip.R
 import fr.toporin.satochip.ui.component.AcceptButton
+import fr.toporin.satochip.ui.component.CommonBottomNavigation
+import fr.toporin.satochip.ui.component.CommonContainer
+import fr.toporin.satochip.ui.component.CommonHeader
 import fr.toporin.satochip.ui.component.RejectButton
 import fr.toporin.satochip.ui.theme.SatochipTheme
 import fr.toporin.satochip.util.DisplayRequestInfo
@@ -81,38 +84,21 @@ class TransactionFragment : Fragment() {
         Column (
             Modifier.fillMaxSize(),
         ){
-            // Title
             Box(
                 modifier = Modifier
-                    .weight(0.5f)
+                    .weight(0.6f)
                     .fillMaxWidth()
-                    .background(color = Color(0xFF1A1B2B)),
             ) {
-                Image(
-                    modifier = Modifier
-                        .align(Alignment.Center)
-                        .padding(16.dp)
-                        .size(width = 300.dp, height = 300.dp),
-                    painter = painterResource(id = R.drawable.title_transaction), contentDescription = "" )
+                CommonHeader(drawableId = R.drawable.title_transaction)
             }
             // Container
             Box(
                 modifier = Modifier
                     .weight(5f)
-                    .fillMaxSize()
-                    .background(color = Color(0xFF1A1B2B)),
+                    .fillMaxSize(),
                 contentAlignment = Alignment.TopCenter,
             ) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(16.dp)
-                        .background(
-                            color = Color(0xFF2A2B3B),
-                            shape = RoundedCornerShape(16.dp)
-                        ),
-                    contentAlignment = Alignment.TopCenter,
-                ) {
+                CommonContainer {
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.spacedBy(32.dp)
@@ -155,50 +141,15 @@ class TransactionFragment : Fragment() {
                         }
                     }
                 }
+
             }
             //Navigation
             Box(
                 modifier = Modifier
                     .weight(0.6f)
-                    .background(color = Color(0xFF1A1B2B))
+                    .fillMaxWidth()
             ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    Image(
-                        modifier = Modifier
-                            .padding(16.dp)
-                            .size(40.dp),
-                        painter = painterResource(id = R.drawable.ic_transaction_active),
-                        contentDescription = ""
-                    )
-                    Image(
-                        modifier = Modifier
-                            .padding(16.dp)
-                            .size(40.dp)
-                            .clickable { navController.navigate(R.id.action_transactionFragment_to_qrCodeFragment) },
-                        painter = painterResource(id = R.drawable.ic_qrcode_default),
-                        contentDescription = "Navigate to QRCode"
-                    )
-                    Image(
-                        modifier = Modifier
-                            .padding(16.dp)
-                            .size(40.dp)
-                            .clickable { navController.navigate("settings") },
-                        painter = painterResource(id = R.drawable.ic_settings_default),
-                        contentDescription = ""
-                    )
-                    Image(
-                        modifier = Modifier
-                            .padding(16.dp)
-                            .size(40.dp)
-                            .clickable { navController.navigate("logs") },
-                        painter = painterResource(id = R.drawable.ic_logs_default),
-                        contentDescription = ""
-                    )
-                }
+                CommonBottomNavigation(navController, currentScreenId = R.id.transactionFragment)
             }
         }
     }

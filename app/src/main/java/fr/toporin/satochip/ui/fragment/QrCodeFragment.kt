@@ -43,6 +43,9 @@ import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.barcode.common.Barcode
 import com.google.mlkit.vision.common.InputImage
 import fr.toporin.satochip.R
+import fr.toporin.satochip.ui.component.CommonBottomNavigation
+import fr.toporin.satochip.ui.component.CommonContainer
+import fr.toporin.satochip.ui.component.CommonHeader
 import fr.toporin.satochip.ui.theme.SatochipTheme
 
 class QrCodeFragment : Fragment() {
@@ -57,7 +60,7 @@ class QrCodeFragment : Fragment() {
         ) { isGranted: Boolean ->
             if (isGranted) {
                 //TODO
-                // Permission is granted. Continue the action or workflow in your app.
+                // Permission is granted. Continue the action or workflow in the app.
             } else {
                 //TODO
                 // Explain to the user that the feature is unavailable because the
@@ -85,10 +88,11 @@ class QrCodeFragment : Fragment() {
             ContextCompat.checkSelfPermission(
                 requireContext(), Manifest.permission.CAMERA
             ) == PackageManager.PERMISSION_GRANTED -> {
-                // You can use the API that requires the permission.
+                //TODO Use the API that requires the permission.
             }
             shouldShowRequestPermissionRationale(Manifest.permission.CAMERA) -> {
-                // In an educational UI, explain to the user why your app requires this
+                //TODO
+                // Explain to the user why the app requires this
                 // permission for a specific feature to behave as expected. In this UI,
                 // include a "cancel" or "no thanks" button that allows the user to
                 // continue using your app without granting the permission.
@@ -111,11 +115,11 @@ class QrCodeFragment : Fragment() {
             .addOnSuccessListener { barcodes ->
                 for (barcode in barcodes) {
                     val secret2FAScan = barcode.rawValue
-                    // Utilise `rawValue` comme la valeur du QR Code scannée
+                    //TODO Utiliser `rawValue` comme la valeur du QR Code scannée
                 }
             }
             .addOnFailureListener {
-                // Gère l'échec de la lecture du QR Code
+                //TODO Gèrer l'échec de la lecture du QR Code
             }
     }
 
@@ -131,18 +135,10 @@ class QrCodeFragment : Fragment() {
             // Title
             Box(
                 modifier = Modifier
-                    .weight(0.5f)
+                    .weight(0.6f)
                     .fillMaxWidth()
-                    .background(color = Color(0xFF1A1B2B)),
             ) {
-                Image(
-                    modifier = Modifier
-                        .align(Alignment.Center)
-                        .padding(16.dp)
-                        .size(width = 300.dp, height = 300.dp),
-                    painter = painterResource(id = R.drawable.title_transaction),
-                    contentDescription = ""
-                )
+                CommonHeader(drawableId = R.drawable.title_qrcode)
             }
             // Container
             Box(
@@ -152,16 +148,7 @@ class QrCodeFragment : Fragment() {
                     .background(color = Color(0xFF1A1B2B)),
                 contentAlignment = Alignment.TopCenter,
             ) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(16.dp)
-                        .background(
-                            color = Color(0xFF2A2B3B),
-                            shape = RoundedCornerShape(16.dp)
-                        ),
-                    contentAlignment = Alignment.TopCenter,
-                ) {
+                CommonContainer {
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.spacedBy(32.dp)
@@ -187,45 +174,9 @@ class QrCodeFragment : Fragment() {
             Box(
                 modifier = Modifier
                     .weight(0.6f)
-                    .background(color = Color(0xFF1A1B2B))
+                    .fillMaxWidth()
             ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    Image(
-                        modifier = Modifier
-                            .padding(16.dp)
-                            .size(40.dp)
-                            .clickable { navController.navigate(R.id.action_qrCodeFragment_to_transactionFragment) },
-                        painter = painterResource(id = R.drawable.ic_transaction_default),
-                        contentDescription = ""
-                    )
-                    Image(
-                        modifier = Modifier
-                            .padding(16.dp)
-                            .size(40.dp),
-                        painter = painterResource(id = R.drawable.ic_qrcode_active),
-                        contentDescription = ""
-                    )
-                    Image(
-                        modifier = Modifier
-                            .padding(16.dp)
-                            .size(40.dp)
-                            .clickable { navController.navigate("settings") },
-                        painter = painterResource(id = R.drawable.ic_settings_default),
-                        contentDescription = ""
-                    )
-                    Image(
-                        modifier = Modifier
-                            .padding(16.dp)
-                            .size(40.dp)
-                            .clickable { navController.navigate("logs") },
-                        painter = painterResource(id = R.drawable.ic_logs_default),
-                        contentDescription = ""
-                    )
-                }
+                CommonBottomNavigation(navController, currentScreenId = R.id.qrCodeFragment)
             }
         }
     }

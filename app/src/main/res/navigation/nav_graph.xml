@@ -13,18 +13,25 @@
     <!-- Transaction fragment -->
     <fragment
         android:id="@+id/transactionFragment"
-        android:name="fr.toporin.satochip.ui.fragment.TransactionFragment">
-        <action
-            android:id="@+id/action_transactionFragment_to_qrCodeFragment"
-            app:destination="@id/qrCodeFragment" />
-    </fragment>
+        android:name="fr.toporin.satochip.ui.fragment.TransactionFragment" />
+
     <!-- QR code fragment -->
     <fragment
         android:id="@+id/qrCodeFragment"
         android:name="fr.toporin.satochip.ui.fragment.QrCodeFragment"
         android:label="fragment_qr_code" />
-        <action
-            android:id="@+id/action_qrCodeFragment_to_transactionFragment"
-            app:destination="@id/transactionFragment" />
+
+    <!-- Settings fragment -->
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="fr.toporin.satochip.ui.fragment.SettingsFragment"
+        android:label="fragment_settings" />
+
+    <!-- Logs fragment -->
+    <fragment
+        android:id="@+id/logsFragment"
+        android:name="fr.toporin.satochip.ui.fragment.LogsFragment"
+        android:label="fragment_logs" />
+
     <!-- Other fragments -->
 </navigation>
