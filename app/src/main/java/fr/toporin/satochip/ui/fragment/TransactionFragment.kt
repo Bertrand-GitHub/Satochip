@@ -20,7 +20,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -132,19 +131,11 @@ class TransactionFragment : Fragment() {
                     ) {
                         Text(
                             text = "The request is:",
-                            color = Color(0xFFFFBB0B),
-                            style = TextStyle(fontWeight = FontWeight.Normal, fontSize = 24.sp),
-                            modifier = Modifier
-                                .padding(top = 24.dp)
+                            style = titleStyle,
                         )
                         Text(
                             text = action,
-                            color = Color(0xFFFFFFFF),
-                            style = TextStyle(
-                                fontWeight = FontWeight.Light,
-                                fontSize = 24.sp,
-                                fontStyle = FontStyle.Italic
-                            )
+                            style = contentStyle
                         )
 
                         DisplayRequestInfo(

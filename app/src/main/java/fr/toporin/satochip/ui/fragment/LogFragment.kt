@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -26,8 +25,6 @@ import fr.toporin.satochip.ui.component.CommonHeader
 import fr.toporin.satochip.ui.theme.SatochipTheme
 
 class LogFragment : Fragment() {
-
-    private lateinit var requestPermissionLauncher: ActivityResultLauncher<String>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
