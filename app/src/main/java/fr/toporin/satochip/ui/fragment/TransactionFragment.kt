@@ -73,8 +73,11 @@ class TransactionFragment : Fragment() {
         generatedId2FA: String,
         rawRequest: String,
         message: String,
-        authentiKey: String
+        authentiKey: String,
+
     ) {
+        println("Display Info rawRequest = $rawRequest")
+
         when (UserFriendlyRequest.fromRawRequest(rawRequest)) {
             UserFriendlyRequest.RESET_SEED -> {
                 CommonColumn(title = "AuthentiKey:", content = authentiKey, titleStyle = titleStyle, contentStyle = contentStyle)
@@ -84,6 +87,9 @@ class TransactionFragment : Fragment() {
             }
             UserFriendlyRequest.RESET_2FA -> {
                 CommonColumn(title = "Your 2FA ID is:", content = generatedId2FA, titleStyle = titleStyle, contentStyle = contentStyle)
+            }
+            UserFriendlyRequest.SIGN_TRANSACTION -> {
+                CommonColumn(title = "Transaction is:", content = "Afficher transaction parsée", titleStyle = titleStyle, contentStyle = contentStyle)
             }
             else -> {
                 Text(
@@ -138,12 +144,14 @@ class TransactionFragment : Fragment() {
                             style = contentStyle
                         )
 
-                        DisplayRequestInfo(
-                            generatedId2FA = generatedId2FA,
-                            rawRequest = rawRequest,
-                            message = message,
-                            authentiKey = authentiKey
-                        )
+                        if (rawRequest != null) {
+                            DisplayRequestInfo(
+                                generatedId2FA = generatedId2FA,
+                                rawRequest = rawRequest,
+                                message = message,
+                                authentiKey = authentiKey
+                            )
+                        }
 
                         Spacer(modifier = Modifier.weight(1f))
                         Row(

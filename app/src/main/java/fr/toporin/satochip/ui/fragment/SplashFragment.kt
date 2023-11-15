@@ -49,7 +49,7 @@ class SplashFragment : Fragment() {
         // Stockez la référence de la coroutine pour pouvoir l'annuler plus tard.
         val job = viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                delay(3000)
+                delay(1000)
                 if (isAdded) {
                     findNavController().navigate(R.id.action_splashFragment_to_transactionFragment)
                 }

@@ -52,12 +52,15 @@ android {
 
 dependencies {
     // XML-RCP
-    implementation("fr.turri:aXMLRPC:1.12.0")
+    implementation("fr.turri:aXMLRPC:1.13.0")
 
     // BouncyCastle for Security
-    implementation("org.bouncycastle:bcpkix-jdk15on:1.67")
-    implementation("org.bouncycastle:bcprov-jdk15on:1.67")
+    implementation("org.bouncycastle:bcpkix-jdk15on:1.70")
+    implementation("org.bouncycastle:bcprov-jdk15on:1.70")
     implementation("com.squareup.okio:okio:3.6.0")
+
+    // For Java Crypto Tools
+    implementation("com.google.guava:guava:32.1.3-jre")
 
     // Kotlin Core & AndroidX
     implementation("androidx.core:core-ktx:1.12.0")
@@ -69,7 +72,7 @@ dependencies {
     implementation("javax.inject:javax.inject:1")
 
     // Jetpack Compose UI
-    implementation(platform("androidx.compose:compose-bom:2023.03.00"))
+    implementation(platform("androidx.compose:compose-bom:2023.10.01"))
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
@@ -85,6 +88,7 @@ dependencies {
 
     // ML Kit Barcode Scanning
     implementation("com.google.mlkit:barcode-scanning:17.2.0")
+    implementation(files("src/main/java/fr/toporin/satochip/libs/javacryptotools-0.1.0.jar"))
 
     // Unit Testing
     testImplementation("junit:junit:4.13.2")
@@ -92,7 +96,7 @@ dependencies {
     // Android UI Testing
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
-    androidTestImplementation(platform("androidx.compose:compose-bom:2023.03.00"))
+    androidTestImplementation(platform("androidx.compose:compose-bom:2023.10.01"))
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
 
     // Debugging & Tooling

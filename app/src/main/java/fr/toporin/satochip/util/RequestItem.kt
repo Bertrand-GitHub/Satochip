@@ -1,21 +1,8 @@
 package fr.toporin.satochip.util
 
+import fr.toporin.satochip.model.interfaces.RequestData
 import java.util.UUID
 
-enum class WarningCode(val code: Int) {
-    Ok(0),
-    HashMismatch(1),
-    UnsupportedSignMsgHashRequest(2),
-    WrongMessageFormat(3),
-    EIP712Unsupported(4),
-    FailedToParseEIP712Msg(5)
-}
-
-interface RequestData {
-    val type: String
-    var challengeHex: String
-    var warningCode: WarningCode
-}
 
 data class RequestItem(
     val id: UUID = UUID.randomUUID(),
