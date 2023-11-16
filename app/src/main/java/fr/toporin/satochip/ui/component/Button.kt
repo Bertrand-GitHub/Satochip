@@ -62,6 +62,50 @@ fun RejectButton(onClick: () -> Unit) {
     }
 }
 
+@Composable
+fun ScanButton(onClick: () -> Unit) {
+    OutlinedButton(
+        onClick = onClick,
+        modifier = Modifier
+            .width(140.dp)
+            .height(100.dp),
+        shape = RoundedCornerShape(10.dp)
+    )
+    {
+        Text(
+            text = "SCAN   QR CODE",
+            textAlign = TextAlign.Center,
+            color = Color.LightGray,
+            style = TextStyle(
+                fontWeight = FontWeight.Normal,
+                fontSize = 20.sp,
+            )
+        )
+    }
+}
+
+@Composable
+fun ConfirmQrCodeButton(onClick: () -> Unit) {
+    OutlinedButton(
+        onClick = onClick,
+        modifier = Modifier
+            .width(140.dp)
+            .height(100.dp),
+        shape = RoundedCornerShape(10.dp)
+    )
+    {
+        Text(
+            text = "CONFIRM QR CODE",
+            textAlign = TextAlign.Center,
+            color = Orange,
+            style = TextStyle(
+                fontWeight = FontWeight.Normal,
+                fontSize = 20.sp,
+            )
+        )
+    }
+}
+
 @Preview
 @Composable
 fun AcceptButtonPreview() {
@@ -72,4 +116,10 @@ fun AcceptButtonPreview() {
 @Composable
 fun RejectButtonPreview() {
     RejectButton(onClick = { /*TODO*/ })
+}
+
+@Preview
+@Composable
+fun ScanButtonPreview() {
+    ScanButton(onClick = { /*TODO*/ })
 }

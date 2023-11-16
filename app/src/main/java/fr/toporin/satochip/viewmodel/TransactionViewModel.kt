@@ -35,7 +35,7 @@ class TransactionViewModel : ViewModel() {
 
 
     fun initializeId2FA() {
-        val secret2FA = "0b041c61d69bb0eacd3559dd8c894d7bbe46f618" // Utilise une variable locale pour stocker la valeur
+        val secret2FA = "0b28c1bfa856f9bd25aefa155e1096587acf046e" // Utilise une variable locale pour stocker la valeur
         viewModelScope.launch(Dispatchers.IO) {
             _secret2FA.postValue(secret2FA) // Met à jour LiveData avec la valeur
             val secret2FAByteArray = secret2FA.toByteArray(Charsets.UTF_8) // Convertit la chaîne en ByteArray

@@ -138,6 +138,7 @@ class TransactionFragment : Fragment() {
                         Text(
                             text = "The request is:",
                             style = titleStyle,
+                            modifier = Modifier.padding(top = 16.dp)
                         )
                         Text(
                             text = action,

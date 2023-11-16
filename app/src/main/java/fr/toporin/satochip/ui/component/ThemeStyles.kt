@@ -17,4 +17,11 @@ val contentStyle = TextStyle(
     color = Color(0xFFFFFFFF)
 )
 
+val dataStyle = TextStyle(
+    fontWeight = FontWeight.SemiBold,
+    fontSize = 26.sp,
+    color = Color(0xFF33CCFF)
+)
+
+
 
