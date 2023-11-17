@@ -25,6 +25,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.fragment.findNavController
@@ -37,20 +38,24 @@ import fr.toporin.satochip.ui.component.CommonContainer
 import fr.toporin.satochip.ui.component.CommonHeader
 import fr.toporin.satochip.ui.component.RejectButton
 import fr.toporin.satochip.ui.theme.SatochipTheme
-import fr.toporin.satochip.ui.theme.contentStyle
-import fr.toporin.satochip.ui.theme.titleStyle
+import fr.toporin.satochip.ui.component.contentStyle
+import fr.toporin.satochip.ui.component.titleStyle
+import fr.toporin.satochip.viewmodel.SharedViewModel
 import fr.toporin.satochip.viewmodel.TransactionViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class TransactionFragment : Fragment() {
-    // TODO: Rename and change types of parameters
+    private val sharedViewModel: SharedViewModel by activityViewModels()
     private val viewModel: TransactionViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel.viewModelScope.launch(Dispatchers.IO) {
-            viewModel.initializeId2FA()
+        val qrCodeValue = sharedViewModel.qrCodeValue.value
+        if (!qrCodeValue.isNullOrEmpty()) {
+            viewModel.viewModelScope.launch(Dispatchers.IO) {
+                viewModel.initializeId2FA(qrCodeValue)
+            }
         }
     }
 

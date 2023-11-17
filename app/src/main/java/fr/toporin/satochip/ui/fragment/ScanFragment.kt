@@ -123,7 +123,10 @@ class ScanFragment : Fragment() {
         cameraController.bindToLifecycle(viewLifecycleOwner)
         previewView.controller = cameraController
     }
-
+    private fun stopCamera() {
+        barcodeScanner.close()
+        cameraExecutor.shutdown()
+    }
 
     private fun allPermissionsGranted() = REQUIRED_PERMISSIONS.all {
         ContextCompat.checkSelfPermission(
@@ -133,8 +136,7 @@ class ScanFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        cameraExecutor.shutdown()
-        barcodeScanner.close()
+        stopCamera()
     }
 
     companion object {

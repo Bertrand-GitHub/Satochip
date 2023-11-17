@@ -34,16 +34,16 @@ class TransactionViewModel : ViewModel() {
 //    val msgJsonLiveData = MutableLiveData<Map<String, Any>>()
 
 
-    fun initializeId2FA() {
-        val secret2FA = "0b28c1bfa856f9bd25aefa155e1096587acf046e" // Utilise une variable locale pour stocker la valeur
+    fun initializeId2FA(qrCodeValue: String) {
+        val secret2FA = qrCodeValue.toByteArray(Charsets.UTF_8)
         viewModelScope.launch(Dispatchers.IO) {
-            _secret2FA.postValue(secret2FA) // Met à jour LiveData avec la valeur
-            val secret2FAByteArray = secret2FA.toByteArray(Charsets.UTF_8) // Convertit la chaîne en ByteArray
-            generateValues(secret2FAByteArray) // Appelle ta fonction avec le ByteArray
+            _secret2FA.postValue(qrCodeValue)
+            generateValues(secret2FA)
+            println("secret2FA = $secret2FA")
         }
     }
 
-    fun generateValues(secret2FA: ByteArray) {
+    private fun generateValues(secret2FA: ByteArray) {
         factorItem = FactorItem(secret2FA)
         val id2FA = factorItem?.id2FA
         id2FA?.let {
