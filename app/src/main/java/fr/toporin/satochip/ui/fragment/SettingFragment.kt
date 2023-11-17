@@ -1,6 +1,5 @@
 package fr.toporin.satochip.ui.fragment
 
-import fr.toporin.satochip.repository.QrCodeRepository
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,10 +11,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -30,13 +27,14 @@ import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import fr.toporin.satochip.R
+import fr.toporin.satochip.repository.QrCodeRepository
 import fr.toporin.satochip.ui.component.CommonBottomNavigation
 import fr.toporin.satochip.ui.component.CommonContainer
 import fr.toporin.satochip.ui.component.CommonHeader
-import fr.toporin.satochip.ui.theme.SatochipTheme
 import fr.toporin.satochip.ui.component.textStyle
 import fr.toporin.satochip.ui.component.title2Style
 import fr.toporin.satochip.ui.component.titleStyle
+import fr.toporin.satochip.ui.theme.SatochipTheme
 
 class SettingFragment : Fragment() {
 
@@ -65,9 +63,7 @@ class SettingFragment : Fragment() {
     fun SettingsScreen() {
         val navController = findNavController()
         val qrCodes = qrCodeRepository.getQrCodes()
-        var expanded by remember { mutableStateOf(false) }
-        var selectedServer by remember { mutableStateOf("https://cosigner.electrum.org") }
-        val servers = listOf("https://cosigner.electrum.org", "https://cosigner.satochip.io")
+        var showDialog by remember { mutableStateOf(false) }
 
         Column(
             Modifier.fillMaxSize(),
@@ -138,12 +134,43 @@ class SettingFragment : Fragment() {
                             ) {
                                 Button(
                                     onClick = {
-                                        qrCodeRepository.deleteQrCode(qrCode)
-                                        Toast.makeText(context, "ID2FA removed", Toast.LENGTH_SHORT)
-                                            .show()
-                                        requireActivity().recreate()
+                                        showDialog = true
                                     }) {
                                     Text(text = "REMOVE")
+                                }
+
+                                if (showDialog) {
+                                    AlertDialog(
+                                        onDismissRequest = {
+                                            showDialog = false
+                                        },
+                                        title = {
+                                            Text(text = "WATCH OUT!")
+                                        },
+                                        text = {
+                                            Text("Are you really sure you want to remove this 2FA? \nThis action is irreversible !\nPlease make sure you have a backup of you 2FA secret.")
+
+                                        },
+                                        confirmButton = {
+                                            Button(
+                                                onClick = {
+                                                    qrCodeRepository.deleteQrCode(qrCode)
+                                                    Toast.makeText(context, "ID2FA REMOVED", Toast.LENGTH_SHORT).show()
+                                                    requireActivity().recreate()
+                                                    showDialog = false
+                                                }) {
+                                                Text("YES")
+                                            }
+                                        },
+                                        dismissButton = {
+                                            Button(
+                                                onClick = {
+                                                    showDialog = false
+                                                }) {
+                                                Text("NO")
+                                            }
+                                        }
+                                    )
                                 }
                             }
                         }

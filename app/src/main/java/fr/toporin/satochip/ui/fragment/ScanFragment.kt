@@ -115,6 +115,7 @@ class ScanFragment : Fragment() {
                     ScanFragmentDirections.actionScanFragmentToQrCodeFragment()
                 }
                 if (action != null) {
+                    sharedViewModel.showSnackbar.value = true
                     findNavController().navigate(action)
                 }
 

@@ -1,6 +1,5 @@
 package fr.toporin.satochip.ui.fragment
 
-import fr.toporin.satochip.repository.QrCodeRepository
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -14,7 +13,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Snackbar
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -24,20 +26,21 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import fr.toporin.satochip.R
+import fr.toporin.satochip.repository.QrCodeRepository
 import fr.toporin.satochip.ui.component.CommonBottomNavigation
 import fr.toporin.satochip.ui.component.CommonContainer
 import fr.toporin.satochip.ui.component.CommonHeader
 import fr.toporin.satochip.ui.component.ConfirmQrCodeButton
 import fr.toporin.satochip.ui.component.ScanButton
-import fr.toporin.satochip.ui.theme.SatochipTheme
-import fr.toporin.satochip.ui.component.dataStyle
 import fr.toporin.satochip.ui.component.titleStyle
+import fr.toporin.satochip.ui.theme.SatochipTheme
 import fr.toporin.satochip.viewmodel.SharedViewModel
 import fr.toporin.satochip.viewmodel.TransactionViewModel
 
@@ -68,8 +71,11 @@ class QrCodeFragment : Fragment() {
     @Composable
     fun QrCodeScreen() {
         val navController = findNavController()
+        val showSnackbar by sharedViewModel.showSnackbar.observeAsState(initial = false)
         val qrCodeValue by sharedViewModel.qrCodeValue.observeAsState(initial = "")
         var label2FA by remember { mutableStateOf("") }
+
+
 
         Column(
             Modifier.fillMaxSize(),
@@ -106,11 +112,19 @@ class QrCodeFragment : Fragment() {
                         ScanButton(onClick = { navController.navigate(R.id.scanFragment) }
                         )
 
-                        if (qrCodeValue.isNotEmpty()) {
-                            Text(
-                                text = "QR Code Added",
-                                style = dataStyle,
-                            )
+                        if (showSnackbar) {
+                            Surface(color = Color(0xFFFFBB0B)) {
+                                Snackbar(
+                                    action = {
+                                        TextButton(onClick = { sharedViewModel.showSnackbar.value = false }) {
+                                            Text("Dismiss", color = Color.White)
+                                        }
+                                    },
+                                    modifier = Modifier.padding(8.dp)
+                                ) {
+                                    Text("QR Code has been scanned.", color = Color.White)
+                                }
+                            }
                         }
 
                         Text(
