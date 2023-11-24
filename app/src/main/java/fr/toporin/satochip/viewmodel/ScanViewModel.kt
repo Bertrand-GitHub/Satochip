@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.MutableLiveData
 import com.google.mlkit.vision.barcode.common.Barcode
 
-class ScanViewModel(barcode: Barcode) : ViewModel() {
+class ScanViewModel : ViewModel() {
     val qrContent = MutableLiveData<String>()
     var boundingRect: Rect? = null
 

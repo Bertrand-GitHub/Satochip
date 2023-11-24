@@ -104,7 +104,7 @@ class ScanFragment : Fragment() {
                 val qrCodeValue = barcodeResults.first().rawValue
                 sharedViewModel.setQrCodeValue(qrCodeValue ?: "")
 
-                val qrCodeViewModel = ScanViewModel(barcodeResults[0])
+                val qrCodeViewModel = ScanViewModel()
                 qrCodeViewModel.processBarcode(barcodeResults[0])
                 val qrCodeDrawable = QrCodeDrawable(qrCodeViewModel)
 

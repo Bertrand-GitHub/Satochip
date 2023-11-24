@@ -12,19 +12,30 @@ class QrCodeRepository(context: Context) {
     }
 
 
-    fun saveQrCode(qrCode: String, label: String) {
+    fun saveQrCode(qrCode: String, id2FA: String, label: String) {
+        val qrCodeData = "$qrCode,$id2FA,$label"
         sharedPreferences.edit {
-            putString(qrCode, label)
+            putString(id2FA, qrCodeData)
+            commit()
         }
     }
 
-    fun getQrCodes(): Map<String, String> {
-        return sharedPreferences.all.filterValues { it is String }.mapValues { it.value as String }
+    fun getQrCodesData(): Map<String, Triple<String, String, String>> {
+        val allEntries = sharedPreferences.all
+        return allEntries.mapValues { entry ->
+            val dataParts = entry.value.toString().split(",")
+            if (dataParts.size == 3) {
+                Triple(dataParts[0], dataParts[1], dataParts[2])
+            } else {
+                Triple("", "", "")
+            }
+        }
     }
 
-    fun deleteQrCode(qrCode: String) {
+    fun deleteQrCode(id2FA: String) {
         sharedPreferences.edit {
-            remove(qrCode)
+            remove(id2FA)
+            commit()
         }
     }
 }

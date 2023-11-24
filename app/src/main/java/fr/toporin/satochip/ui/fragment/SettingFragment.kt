@@ -62,7 +62,7 @@ class SettingFragment : Fragment() {
     @Composable
     fun SettingsScreen() {
         val navController = findNavController()
-        val qrCodes = qrCodeRepository.getQrCodes()
+        val qrCodes = qrCodeRepository.getQrCodesData()
         var showDialog by remember { mutableStateOf(false) }
 
         Column(
@@ -97,7 +97,8 @@ class SettingFragment : Fragment() {
                             )
                         }
 
-                        qrCodes.forEach { (qrCode, label) ->
+                        qrCodes.forEach { (_, qrCodeData) ->
+                            val (_, id2FA, label) = qrCodeData
                             Column(
                                 modifier = Modifier.fillMaxWidth(),
                             ) {
@@ -121,7 +122,7 @@ class SettingFragment : Fragment() {
                                         .fillMaxWidth()
                                 )
                                 Text(
-                                    text = qrCode,
+                                    text = id2FA,
                                     style = textStyle,
                                     modifier = Modifier
                                         .padding(horizontal = 16.dp, vertical = 8.dp)
@@ -154,7 +155,7 @@ class SettingFragment : Fragment() {
                                         confirmButton = {
                                             Button(
                                                 onClick = {
-                                                    qrCodeRepository.deleteQrCode(qrCode)
+                                                    qrCodeRepository.deleteQrCode(id2FA)
                                                     Toast.makeText(context, "ID2FA REMOVED", Toast.LENGTH_SHORT).show()
                                                     requireActivity().recreate()
                                                     showDialog = false

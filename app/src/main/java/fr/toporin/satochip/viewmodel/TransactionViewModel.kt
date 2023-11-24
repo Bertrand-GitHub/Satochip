@@ -38,8 +38,9 @@ class TransactionViewModel : ViewModel() {
         val secret2FA = qrCodeValue.toByteArray(Charsets.UTF_8)
         viewModelScope.launch(Dispatchers.IO) {
             _secret2FA.postValue(qrCodeValue)
+            println("qrCodeValue = $qrCodeValue")
             generateValues(secret2FA)
-            println("secret2FA = $secret2FA")
+            println("secret2FABytes = $secret2FA")
         }
     }
 
@@ -52,7 +53,7 @@ class TransactionViewModel : ViewModel() {
         }
     }
 
-    fun getEncryptedMessage(generatedId2FA: String) {
+    private fun getEncryptedMessage(generatedId2FA: String) {
         viewModelScope.launch {
             println("getMessage appelé avec l'ID: $generatedId2FA")
             val message = withContext(Dispatchers.IO) { messageRepository.fetchMessage(generatedId2FA) }
@@ -66,7 +67,7 @@ class TransactionViewModel : ViewModel() {
 
                 when (rawRequest) {
                     "reset_seed" -> getResetSeedRequest(decryptedMsg)
-                    "sign_msg" -> getSignMessageRequest(decryptedMsg)
+//                    "sign_msg" -> getSignMessageRequest(decryptedMsg)
                     "reset_2FA" -> getReset2FARequest(decryptedMsg)
                     "tx" -> getSignTxRequest(decryptedMsg)
                     else -> {
@@ -97,19 +98,36 @@ class TransactionViewModel : ViewModel() {
     }
 
     //To Sign Message
-    fun getSignMessageRequest(decryptedMessage: Map<String, Any>) {
-        val rawMessage = decryptedMessage["msg"] as? String
-        messageLiveData.postValue(rawMessage ?: "Message non trouvé")
-        println("messageLiveData mis à jour = $rawMessage")
-    }
+//    fun getSignMessageRequest(decryptedMessage: Map<String, Any>) {
+//        val rawMessage = decryptedMessage["msg"] as? String
+//        val msgHashHex: String
+//        var challengeHex = String
+//        var responseHex = "00".repeat(20)  // reject by default
+//        val altcoin = decryptedMessage["alt"] as? String ?: "Bitcoin"
+//        val headerSize = byteArrayOf((altcoin.toByteArray().size + 17).toByte())
+//        val msgBytes = rawMessage?.toByteArray(Charsets.UTF_8)
+//        var msgPaddedBytes = headerSize + altcoin.toByteArray(Charsets.UTF_8) + " Signed Message:\n".toByteArray(Charsets.UTF_8)
+//        if (msgBytes != null) {
+//            msgPaddedBytes += VarInt(msgBytes.size).data + msgBytes
+//        }
+//
+//        msgHashHex = TxParser.sha256(msgPaddedBytes).toHex()
+//        challengeHex = msgHashHex + "BB".repeat(32)
+//
+//
+//
+//        messageLiveData.postValue(rawMessage ?: "Message non trouvé")
+//        println("messageLiveData mis à jour = $rawMessage")
+//    }
 
     // To Reset Seed
     fun getResetSeedRequest(decryptedMessage: Map<String, Any>) {
         val rawAuthentiKey = decryptedMessage["authentikeyx"] as? String
         authentiKeyLiveData.postValue(rawAuthentiKey ?: "AuthentiKeyX non trouvé")
         println("authentiKey = $rawAuthentiKey")
+    }
 
-    }fun getReset2FARequest(decryptedMessage: Map<String, Any>) {
+    fun getReset2FARequest(decryptedMessage: Map<String, Any>) {
         val rawReset2FA = decryptedMessage["action"] as? String
         reset2FALiveData.postValue(rawReset2FA ?: "Reset 2FA non trouvé")
         println("reset2FA = $rawReset2FA")

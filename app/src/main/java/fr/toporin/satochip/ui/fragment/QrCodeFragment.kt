@@ -142,19 +142,20 @@ class QrCodeFragment : Fragment() {
                             transactionViewModel.initializeId2FA(qrCodeValue)
                             transactionViewModel.generatedId2FA.observe(viewLifecycleOwner) { id2FA ->
                                 if (id2FA != null) {
-                                    if (qrCodeRepository.getQrCodes().containsKey(id2FA)) {
+                                    if (qrCodeRepository.getQrCodesData().containsKey(id2FA)) {
                                         Toast.makeText(
                                             context,
                                             "ID2FA already stored",
                                             Toast.LENGTH_LONG
                                         ).show()
                                     } else {
-                                        qrCodeRepository.saveQrCode(id2FA, label2FA)
+                                        qrCodeRepository.saveQrCode(qrCodeValue, id2FA, label2FA)
                                         Toast.makeText(
                                             context,
                                             "ID2FA stored !",
                                             Toast.LENGTH_LONG
                                         ).show()
+                                        findNavController().navigate(R.id.settingsFragment)
                                     }
                                 }
                             }
